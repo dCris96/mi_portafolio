@@ -8,8 +8,9 @@ export default function Page() {
     <main className={styles.main}>
       <div className={styles.contenedor}>
         <div className={styles.retrato}>
-          <Image src={foto} alt="Foto de retrato" />
+          <Image src={foto} alt="Foto de retrato" priority />
         </div>
+
         <div className={styles.informacion}>
           <h1>ANTONY CRESPIN</h1>
           <div className={styles.informacion_fotos}>
@@ -19,8 +20,29 @@ export default function Page() {
           <h2>GRÁFICO</h2>
           <p>DCRIS3344@GMAIL.COM</p>
         </div>
-        <div className={styles.datos}>datos</div>
       </div>
+
+      <section className={styles.datos}>
+        <div className={styles.stat}>
+          <div className={styles.statNum}>1+</div>
+          <div className={styles.statLabel}>Years of experience</div>
+        </div>
+
+        <div className={styles.stat}>
+          <div className={styles.statNum}>40+</div>
+          <div className={styles.statLabel}>Proyects</div>
+        </div>
+
+        <div className={styles.stat}>
+          <div className={styles.statNum}>95%</div>
+          <div className={styles.statLabel}>Recommendation</div>
+        </div>
+
+        <div className={styles.stat}>
+          <div className={styles.statNum}>0</div>
+          <div className={styles.statLabel}>Missed deadlines</div>
+        </div>
+      </section>
     </main>
   );
 }

@@ -14,14 +14,10 @@ export default function PageTransition({
     <AnimatePresence mode="wait">
       <motion.main
         key={pathname}
-        initial={{ opacity: 0, filter: "blur(6px)" }}
-        animate={{ opacity: 1, filter: "blur(0px)" }}
-        exit={{ opacity: 0, filter: "blur(4px)" }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 28,
-        }}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ type: "spring", stiffness: 260, damping: 28 }}
       >
         {children}
       </motion.main>
