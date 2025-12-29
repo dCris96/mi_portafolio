@@ -6,14 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styles from "./Navbar.module.css";
 
-const links = [
-  { label: "Branding", href: "#" },
-  { label: "Social Media", href: "#" },
-  { label: "Illustration", href: "#" },
-  { label: "Editorial", href: "#" },
-  { label: "Web design", href: "#" },
-  { label: "3D", href: "#" },
-];
+type LinkItem = { label: string; href: string };
 
 const listVariants: Variants = {
   hidden: { opacity: 0 },
@@ -50,7 +43,7 @@ const itemVariants: Variants = {
   },
 };
 
-export default function Navbar() {
+export default function Navbar({ links }: { links: LinkItem[] }) {
   const [open, setOpen] = useState(false);
 
   // Cerrar con ESC (opcional pero recomendado)

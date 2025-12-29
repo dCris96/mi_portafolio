@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Oswald, Albert_Sans } from "next/font/google";
 
 import "./globals.css";
-import Navbar from "./components/Navbar";
 import ThemePicker from "./components/ThemePicker";
+import NavbarServer from "./components/NavbarServer";
+import PageTransition from "./components/PageTransition";
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -42,8 +43,8 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${oswald.variable} ${albertSans.variable}`}>
-        <Navbar />
-        {children}
+        <NavbarServer />
+        <PageTransition>{children}</PageTransition>
         <ThemePicker />
       </body>
     </html>
