@@ -55,9 +55,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  .wrap {
-    overflow: hidden;
-  }
   .box {
     max-width: 760px;
   }

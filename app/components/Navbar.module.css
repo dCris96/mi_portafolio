@@ -39,7 +39,7 @@
 /* Botón fijo */
 .cta {
   position: absolute;
-  right: 5px;
+  right: 16px;
   top: 0;
   bottom: 0;
   display: flex;
