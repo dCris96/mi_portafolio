@@ -33,7 +33,7 @@ body {
 /* Tema "Mora" */
 [data-theme="Mora"] {
   --background: #4b006e;
-  --fondo-glass: rgb(165, 175, 190);
+  --fondo-glass: #3b0553;
   --texto: #ede3ff;
   --acento: #b8ff3d; /* Color de botones */
   --texto-boton: #2a0033;
@@ -42,7 +42,7 @@ body {
 /* Tema "Rosa" */
 [data-theme="Rosa"] {
   --background: #ff8ad8;
-  --fondo-glass: #dfccd2;
+  --fondo-glass: #c05fa0;
   --texto: #2b0033;
   --acento: #7b1fa2; /* Color de botones */
   --texto-boton: #ffffff;
@@ -60,6 +60,7 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 a {

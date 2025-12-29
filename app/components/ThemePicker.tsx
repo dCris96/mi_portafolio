@@ -1,4 +1,5 @@
 "use client";
+import { WandSparkles, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./ThemePicker.module.css";
@@ -91,7 +92,7 @@ export default function ThemePicker() {
         }}
       >
         <motion.span initial={false} animate={{ rotate: isOpen ? 90 : 0 }}>
-          {isOpen ? "✕" : "🎨"}
+          {isOpen ? <X /> : <WandSparkles />}
         </motion.span>
       </motion.button>
     </div>

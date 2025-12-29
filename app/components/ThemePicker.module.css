@@ -20,6 +20,12 @@
   z-index: 10;
 }
 
+.mainBtn span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .fan {
   position: absolute;
   bottom: 30px;

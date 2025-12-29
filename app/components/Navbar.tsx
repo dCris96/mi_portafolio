@@ -1,5 +1,6 @@
 "use client";
 
+import { IconBrandWhatsapp } from "@tabler/icons-react";
 import type { Variants } from "framer-motion";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -125,7 +126,9 @@ export default function Navbar() {
             damping: 15,
           }}
         >
-          <a href="#">Contáctame</a>
+          <a href="#">
+            <IconBrandWhatsapp stroke={2} /> Contáctame
+          </a>
         </motion.div>
 
         {/* Burger / X (móvil) */}

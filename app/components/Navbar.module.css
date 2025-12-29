@@ -5,10 +5,10 @@
 }
 
 .nav {
-  max-width: 1200px;
+  max-width: 1400px;
   height: 64px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 40px 16px;
 
   display: flex;
   align-items: center;
@@ -18,18 +18,21 @@
 /* Links desktop */
 .links {
   display: flex;
-  gap: 24px;
+  gap: 35px;
 }
 
 .links a {
-  font-size: 14px;
+  font-size: 1rem;
   color: var(--texto);
   text-decoration: none;
   transition: all ease 150ms;
+  border-bottom: 2px transparent solid;
+  padding-bottom: 5px;
 }
 
 .links a:hover {
   color: var(--acento);
+  border-bottom: 2px solid var(--acento);
 }
 
 /* Botón fijo */
@@ -39,16 +42,18 @@
   top: 0;
   bottom: 0;
   display: flex;
-  align-items: center; /* Esto lo centra verticalmente sin usar transform */
+  align-items: center;
 }
 
 .cta a {
-  display: inline-block; /* Importante para que el escalado funcione bien */
+  display: flex; /* Importante para que el escalado funcione bien */
+  gap: 5px;
+  align-items: center;
   background-color: var(--acento);
   color: var(--texto-boton);
   padding: 12px 24px;
   border-radius: 999px;
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
   /* Eliminamos el hover de CSS porque ahora lo hace Framer */
