@@ -1,0 +1,61 @@
+.main {
+  margin: auto;
+  max-width: 1400px;
+}
+
+.contenedor {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.retrato {
+  width: 600px;
+  max-width: 700px;
+  min-width: 400px;
+  z-index: 1;
+}
+
+.retrato img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.informacion {
+  width: 700px;
+  max-width: 700px;
+  min-width: 400px;
+  z-index: 1;
+  font-family: var(--font-oswald);
+  text-align: center;
+}
+
+.informacion h1 {
+  font-size: 6rem;
+  font-weight: 600;
+}
+
+.informacion_fotos {
+  width: 100%;
+}
+
+.informacion h2 {
+  font-size: 6rem;
+  line-height: 7rem;
+  font-weight: 600;
+}
+
+.datos {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
+}
