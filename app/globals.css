@@ -68,6 +68,7 @@ a {
 
 /* Aplicar a todos los elementos que cambian de color */
 body,
+header,
 div,
 button,
 section {

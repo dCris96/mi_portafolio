@@ -2,13 +2,14 @@
   position: sticky;
   top: 0;
   z-index: 200; /* sube el header por encima del menú */
+  background-color: var(--background);
 }
 
 .nav {
   max-width: 1400px;
   height: 64px;
   margin: 0 auto;
-  padding: 40px 0px;
+  padding: 40px 16px;
 
   display: flex;
   align-items: center;

@@ -56,9 +56,9 @@
   backdrop-filter: blur(28px);
   z-index: 20;
   border: 1px solid color-mix(in srgb, var(--texto-boton) 20%, transparent);
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   padding: 30px 100px;
-  justify-content: space-between;
 }
 
 .stat {
@@ -69,4 +69,28 @@
   font-size: 2rem;
   font-family: var(--font-oswald);
   margin-bottom: 10px;
+}
+
+@media screen and (max-width: 1400px) {
+  .retrato {
+    display: none;
+  }
+
+  .informacion {
+    margin-bottom: 20px;
+  }
+
+  .informacion h1 {
+    line-height: 6rem;
+    margin-bottom: 20px;
+  }
+
+  .datos {
+    position: static; /* Lo regresas al flujo normal */
+    transform: none; /* ¡IMPORTANTE! Quitas el desplazamiento del 50% */
+    width: 100%; /* Aseguras que ocupe el ancho del contenedor */
+    padding: 20px; /* Ajustas el padding que era muy grande (100px) para móviles */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
 }
