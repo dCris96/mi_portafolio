@@ -81,8 +81,14 @@
   }
 
   .informacion h1 {
-    line-height: 6rem;
+    font-size: 4.5rem;
+    line-height: 4.5rem;
     margin-bottom: 20px;
+  }
+
+  .informacion h2 {
+    font-size: 4rem;
+    line-height: 4.5rem;
   }
 
   .datos {

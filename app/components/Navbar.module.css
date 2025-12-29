@@ -39,7 +39,7 @@
 /* Botón fijo */
 .cta {
   position: absolute;
-  right: 16px;
+  right: 5px;
   top: 0;
   bottom: 0;
   display: flex;
@@ -191,4 +191,7 @@
   .burger {
     display: block;
   }
+}
+
+@media screen and (max-width: 1400px) {
 }

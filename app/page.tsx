@@ -5,7 +5,7 @@ import WaterDragImages from "./components/WaterDragImages";
 
 export default function Page() {
   return (
-    <main className={styles.main}>
+    <div className={styles.main}>
       <div className={styles.contenedor}>
         <div className={styles.retrato}>
           <Image src={foto} alt="Foto de retrato" priority />
@@ -43,6 +43,6 @@ export default function Page() {
           <div className={styles.statLabel}>Missed deadlines</div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

@@ -53,3 +53,17 @@
     rgba(255, 255, 255, 0.1)
   );
 }
+
+@media screen and (max-width: 768px) {
+  .wrap {
+    overflow: hidden;
+  }
+  .box {
+    max-width: 760px;
+  }
+
+  .card {
+    width: 160px;
+    height: 160px;
+  }
+}
