@@ -1,27 +1,59 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
 }
 
+:root {
+  --background: #1a1a1c;
+  --fondo-glass: #0f0f11;
+  --texto: #f2f2f2;
+  --acento: #ff7700; /* Color de botones */
+  --texto-boton: #ffffff;
+}
+
+/* Tema "Wellness" */
+[data-theme="Wellness"] {
+  --background: #e6f0e8;
+  --fondo-glass: #dde0de;
+  --texto: #3b4d3f;
+  --acento: #7a9e7e; /* Color de botones */
+  --texto-boton: #ffffff;
+}
+
+/* Tema "Editorial" */
+[data-theme="Editorial"] {
+  --background: #fdf6ec;
+  --fondo-glass: #ebe3d9;
+  --texto: #2e4057;
+  --acento: #d97d54; /* Color de botones */
+  --texto-boton: #ffffff;
+}
+
+/* Tema "Mora" */
+[data-theme="Mora"] {
+  --background: #4b006e;
+  --fondo-glass: rgb(165, 175, 190);
+  --texto: #ede3ff;
+  --acento: #b8ff3d; /* Color de botones */
+  --texto-boton: #2a0033;
+}
+
+/* Tema "Rosa" */
+[data-theme="Rosa"] {
+  --background: #ff8ad8;
+  --fondo-glass: #dfccd2;
+  --texto: #2b0033;
+  --acento: #7b1fa2; /* Color de botones */
+  --texto-boton: #ffffff;
+}
+
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-albert-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background);
+  color: var(--texto);
 }
 
 * {
@@ -35,8 +67,13 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* Aplicar a todos los elementos que cambian de color */
+body,
+div,
+button,
+section {
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease;
 }
