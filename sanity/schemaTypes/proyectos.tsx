@@ -54,11 +54,17 @@ export default defineType({
       type: "reference",
       to: [{ type: "category" }],
     }),
+    // CAMBIO AQUÍ: De 'reference' a 'array'
     defineField({
-      name: "subcategory",
-      title: "Subcategoría",
-      type: "reference",
-      to: [{ type: "subcategory" }],
+      name: "subcategories", // Pluralizado para mejor semántica
+      title: "Subcategorías",
+      type: "array",
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "subcategory" }],
+        },
+      ],
     }),
   ],
 });
