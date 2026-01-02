@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import styles from "./page.module.css";
 
 type Subcategory = {
@@ -19,21 +19,29 @@ type Project = {
   _id: string;
   name: string;
   slug: string;
+  description: string;
   images?: ProjectImage[];
   subcategories?: Subcategory[];
 };
 
-const filterRow = {
-  hidden: { opacity: 0, y: -6, filter: "blur(6px)" },
+const filterRow: Variants = {
+  hidden: {
+    opacity: 0,
+    y: -6,
+    filter: "blur(6px)",
+  },
   show: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: { duration: 0.25, ease: "easeOut" },
+    transition: {
+      duration: 0.25,
+      ease: "easeOut",
+    },
   },
 };
 
-const gridVariants = {
+const gridVariants: Variants = {
   hidden: {},
   show: {
     transition: {
@@ -43,7 +51,7 @@ const gridVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 16, scale: 0.98, filter: "blur(8px)" },
   show: {
     opacity: 1,
@@ -193,6 +201,7 @@ function ProjectCard({
               transition={{ type: "spring", stiffness: 250, damping: 22 }}
             >
               <img
+                decoding="async"
                 className={styles.cardImg}
                 src={imgs[1].url}
                 alt={imgs[1].alt ?? project.name}
@@ -205,6 +214,7 @@ function ProjectCard({
               transition={{ type: "spring", stiffness: 250, damping: 22 }}
             >
               <img
+                decoding="async"
                 className={styles.cardImg}
                 src={imgs[0].url}
                 alt={imgs[0].alt ?? project.name}
@@ -214,6 +224,7 @@ function ProjectCard({
           </div>
         ) : (
           <img
+            decoding="async"
             className={styles.cardImg}
             src={imgs[0].url}
             alt={imgs[0].alt ?? project.name}
@@ -269,10 +280,12 @@ function ProjectModal({
 
             {/* Contenido mínimo: galería simple */}
             <div className={styles.modalBody}>
+              <h3>hola: {project.description}</h3>
               <div className={styles.modalGrid}>
                 {(project.images ?? []).map((img, i) => (
                   <div key={img.url + i} className={styles.modalImgWrap}>
                     <img
+                      decoding="async"
                       className={styles.modalImg}
                       src={img.url}
                       alt={img.alt ?? project.name}
