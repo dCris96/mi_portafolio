@@ -19,7 +19,7 @@ type Project = {
   _id: string;
   name: string;
   slug: string;
-  description: string;
+  description?: string;
   images?: ProjectImage[];
   subcategories?: Subcategory[];
 };
@@ -243,6 +243,49 @@ function ProjectModal({
   project: Project | null;
   onClose: () => void;
 }) {
+  const images = project?.images ?? [];
+  const hasMany = images.length > 1;
+
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
+
+  const swipeConfidenceThreshold = 80;
+
+  useEffect(() => {
+    setIndex(0);
+    setDirection(1);
+  }, [project?._id]);
+
+  const clampIndex = (i: number) => {
+    const max = images.length - 1;
+    return Math.max(0, Math.min(i, max));
+  };
+
+  const goTo = (nextIndex: number) => {
+    const ni = clampIndex(nextIndex);
+    if (ni === index) return;
+    setDirection(ni > index ? 1 : -1);
+    setIndex(ni);
+  };
+
+  const prev = () => goTo(index - 1);
+  const next = () => goTo(index + 1);
+
+  // Animación direccional
+  const slideVariants = {
+    enter: (dir: 1 | -1) => ({
+      x: dir === 1 ? 40 : -40,
+      opacity: 0,
+      scale: 0.99,
+    }),
+    center: { x: 0, opacity: 1, scale: 1 },
+    exit: (dir: 1 | -1) => ({
+      x: dir === 1 ? -40 : 40,
+      opacity: 0,
+      scale: 0.99,
+    }),
+  };
+
   return (
     <AnimatePresence>
       {project && (
@@ -252,22 +295,22 @@ function ProjectModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onMouseDown={(e) => {
-            // Cierra si clickeas el overlay (no el contenido)
             if (e.target === e.currentTarget) onClose();
           }}
         >
+          {/* 👇 layout para que el modal anime el cambio de tamaño */}
           <motion.div
             className={styles.modal}
+            layout
+            transition={{ type: "spring", stiffness: 260, damping: 30 }}
             initial={{ opacity: 0, y: 12, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
-            transition={{ duration: 0.18 }}
             role="dialog"
             aria-modal="true"
             aria-label={`Modal del proyecto ${project.name}`}
           >
             <div className={styles.modalHeader}>
-              <h3 className={styles.modalTitle}>{project.name}</h3>
               <button
                 type="button"
                 className={styles.modalClose}
@@ -278,28 +321,110 @@ function ProjectModal({
               </button>
             </div>
 
-            {/* Contenido mínimo: galería simple */}
             <div className={styles.modalBody}>
-              <h3>hola: {project.description}</h3>
-              <div className={styles.modalGrid}>
-                {(project.images ?? []).map((img, i) => (
-                  <div key={img.url + i} className={styles.modalImgWrap}>
-                    <img
-                      decoding="async"
-                      className={styles.modalImg}
-                      src={img.url}
-                      alt={img.alt ?? project.name}
-                      loading="lazy"
-                    />
-                  </div>
-                ))}
+              <div className={styles.textos}>
+                <h3 className={styles.modalTitle}>{project.name}</h3>
+                {project.description ? (
+                  <p className={styles.modalParrafo}>{project.description}</p>
+                ) : null}
               </div>
 
-              {/* Si no hay imágenes */}
-              {(!project.images || project.images.length === 0) && (
+              {images.length === 0 ? (
                 <p className={styles.modalEmpty}>
                   Este proyecto no tiene imágenes.
                 </p>
+              ) : (
+                <div className={styles.gallery}>
+                  {/* 👇 layout aquí también, para suavizar cambios de altura */}
+                  <motion.div
+                    className={styles.mainImageWrap}
+                    layout
+                    transition={{ type: "spring", stiffness: 260, damping: 30 }}
+                  >
+                    {hasMany && (
+                      <button
+                        type="button"
+                        className={`${styles.navBtn} ${styles.navLeft}`}
+                        onClick={prev}
+                        aria-label="Anterior"
+                        disabled={index === 0}
+                      >
+                        ‹
+                      </button>
+                    )}
+
+                    <motion.div
+                      className={styles.mainImageDragArea}
+                      drag={hasMany ? "x" : false}
+                      dragConstraints={{ left: 0, right: 0 }}
+                      dragElastic={0.12}
+                      onDragEnd={(_, info) => {
+                        if (!hasMany) return;
+                        const offset = info.offset.x;
+                        if (offset > swipeConfidenceThreshold) prev();
+                        else if (offset < -swipeConfidenceThreshold) next();
+                      }}
+                    >
+                      <AnimatePresence mode="wait" custom={direction}>
+                        <motion.img
+                          key={images[index].url}
+                          custom={direction}
+                          variants={slideVariants}
+                          initial="enter"
+                          animate="center"
+                          exit="exit"
+                          transition={{ duration: 0.18, ease: "easeOut" }}
+                          className={styles.mainImg}
+                          src={images[index].url}
+                          alt={images[index].alt ?? project.name}
+                          decoding="async"
+                          loading="lazy"
+                          draggable={false}
+                        />
+                      </AnimatePresence>
+                    </motion.div>
+
+                    {hasMany && (
+                      <button
+                        type="button"
+                        className={`${styles.navBtn} ${styles.navRight}`}
+                        onClick={next}
+                        aria-label="Siguiente"
+                        disabled={index === images.length - 1}
+                      >
+                        ›
+                      </button>
+                    )}
+                  </motion.div>
+
+                  {hasMany && (
+                    <div
+                      className={styles.thumbsRow}
+                      aria-label="Carrusel de miniaturas"
+                    >
+                      {images.map((img, i) => (
+                        <button
+                          key={img.url + i}
+                          type="button"
+                          className={`${styles.thumbBtn} ${
+                            i === index ? styles.thumbBtnActive : ""
+                          }`}
+                          onClick={() => goTo(i)}
+                          aria-label={`Ver imagen ${i + 1}`}
+                        >
+                          <img
+                            className={styles.thumbImg}
+                            src={img.url}
+                            alt={img.alt ?? project.name}
+                            decoding="async"
+                            loading="lazy"
+                            draggable={false}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </motion.div>

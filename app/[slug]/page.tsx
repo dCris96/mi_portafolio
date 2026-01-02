@@ -15,6 +15,7 @@ export default async function Page({
   const data = await client.fetch(
     `*[_type == "category" && slug.current == $slug][0]{
     title,
+    description,
     subtitle,
 
     // subcategorías (desde el array de referencias en category)
@@ -29,6 +30,7 @@ export default async function Page({
       _id,
       name,
       "slug": slug.current,
+      description,
 
       // imágenes con url directa (para mostrar en <img /> sin builder)
       images[]{
