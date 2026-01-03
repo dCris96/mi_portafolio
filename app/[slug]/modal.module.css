@@ -1,0 +1,206 @@
+.modalOverlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(100px);
+  padding: 30px;
+}
+
+.modal {
+  width: 100%;
+  height: 100%;
+  background: var(--background);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.modalHeader {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modalClose {
+  width: 45px;
+  height: 45px;
+  border-radius: 999px;
+  border: 1px solid var(--acento);
+  background-color: transparent;
+  color: var(--acento);
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.modalClose:hover {
+  background-color: var(--acento);
+  color: var(--texto-boton);
+}
+
+.modalBody {
+  width: 100%;
+  flex: 1;
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 0;
+}
+
+/* Imagen ocupando todo el alto del modal */
+.modalImgSolo {
+  height: 100%;
+  width: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  border-radius: 20px;
+}
+
+/* Header */
+.modalHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* back a la izquierda, close a la derecha */
+  margin-bottom: 10px;
+}
+
+.modalBack {
+  width: 45px;
+  height: 45px;
+  border-radius: 999px;
+  border: 1px solid var(--acento);
+  background-color: transparent;
+  color: var(--acento);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.modalBack:hover {
+  background-color: var(--acento);
+  color: var(--texto-boton);
+  transition: all 0.3s ease;
+}
+
+/* Textos (solo para proyectos con varias imágenes) */
+.textos {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.modalTitle {
+  margin: 0 0 8px 0;
+  font-size: 1.4rem;
+}
+
+.modalParrafo {
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* ====== GALERÍA PATRÓN 2 + 1 GRANDE ====== */
+.galleryGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* se mantiene en móvil también */
+  gap: 14px;
+  align-content: start;
+}
+
+.tileBtn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.tile {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* 2 pequeñas: cuadradas */
+.tile {
+  aspect-ratio: 1 / 1;
+}
+
+/* Cada 3ra imagen: ocupa 2 columnas y es más “larga” */
+.tileBtn:nth-child(3n) {
+  grid-column: 1 / -1;
+}
+.tileBtn:nth-child(3n) .tile {
+  aspect-ratio: 16 / 9; /* “larga” como tu ejemplo */
+}
+
+.tileImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* como pediste */
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ====== VIEWER (vista completa + swipe infinito) ====== */
+.viewerWrap {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  min-height: 0;
+}
+
+.viewerStage {
+  width: 100%;
+  flex: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.viewerDrag {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+}
+
+.viewerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* “vista completa” real (sin recorte) */
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ====== Single image (0/1) ====== */
+.singleWrap {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.singleImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}

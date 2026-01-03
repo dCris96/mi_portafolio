@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import styles from "./page.module.css";
+import ProjectModal from "./ProjectModal";
 
 type Subcategory = {
   _id: string;
@@ -25,30 +26,18 @@ type Project = {
 };
 
 const filterRow: Variants = {
-  hidden: {
-    opacity: 0,
-    y: -6,
-    filter: "blur(6px)",
-  },
+  hidden: { opacity: 0, y: -6, filter: "blur(6px)" },
   show: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: {
-      duration: 0.25,
-      ease: "easeOut",
-    },
+    transition: { duration: 0.25, ease: "easeOut" },
   },
 };
 
 const gridVariants: Variants = {
   hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.06,
-      delayChildren: 0.05,
-    },
-  },
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
 };
 
 const cardVariants: Variants = {
@@ -161,8 +150,12 @@ export default function CategoryClient({
         </AnimatePresence>
       </motion.div>
 
-      {/* MODAL */}
-      <ProjectModal project={selected} onClose={() => setSelected(null)} />
+      {/* MODAL (componente externo) */}
+      <ProjectModal
+        project={selected}
+        isOpen={!!selected}
+        onClose={() => setSelected(null)}
+      />
     </>
   );
 }
@@ -233,203 +226,5 @@ function ProjectCard({
         )}
       </div>
     </motion.button>
-  );
-}
-
-function ProjectModal({
-  project,
-  onClose,
-}: {
-  project: Project | null;
-  onClose: () => void;
-}) {
-  const images = project?.images ?? [];
-  const hasMany = images.length > 1;
-
-  const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState<1 | -1>(1);
-
-  const swipeConfidenceThreshold = 80;
-
-  useEffect(() => {
-    setIndex(0);
-    setDirection(1);
-  }, [project?._id]);
-
-  const clampIndex = (i: number) => {
-    const max = images.length - 1;
-    return Math.max(0, Math.min(i, max));
-  };
-
-  const goTo = (nextIndex: number) => {
-    const ni = clampIndex(nextIndex);
-    if (ni === index) return;
-    setDirection(ni > index ? 1 : -1);
-    setIndex(ni);
-  };
-
-  const prev = () => goTo(index - 1);
-  const next = () => goTo(index + 1);
-
-  // Animación direccional
-  const slideVariants = {
-    enter: (dir: 1 | -1) => ({
-      x: dir === 1 ? 40 : -40,
-      opacity: 0,
-      scale: 0.99,
-    }),
-    center: { x: 0, opacity: 1, scale: 1 },
-    exit: (dir: 1 | -1) => ({
-      x: dir === 1 ? -40 : 40,
-      opacity: 0,
-      scale: 0.99,
-    }),
-  };
-
-  return (
-    <AnimatePresence>
-      {project && (
-        <motion.div
-          className={styles.modalOverlay}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) onClose();
-          }}
-        >
-          {/* 👇 layout para que el modal anime el cambio de tamaño */}
-          <motion.div
-            className={styles.modal}
-            layout
-            transition={{ type: "spring", stiffness: 260, damping: 30 }}
-            initial={{ opacity: 0, y: 12, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.98 }}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Modal del proyecto ${project.name}`}
-          >
-            <div className={styles.modalHeader}>
-              <button
-                type="button"
-                className={styles.modalClose}
-                onClick={onClose}
-                aria-label="Cerrar"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className={styles.modalBody}>
-              <div className={styles.textos}>
-                <h3 className={styles.modalTitle}>{project.name}</h3>
-                {project.description ? (
-                  <p className={styles.modalParrafo}>{project.description}</p>
-                ) : null}
-              </div>
-
-              {images.length === 0 ? (
-                <p className={styles.modalEmpty}>
-                  Este proyecto no tiene imágenes.
-                </p>
-              ) : (
-                <div className={styles.gallery}>
-                  {/* 👇 layout aquí también, para suavizar cambios de altura */}
-                  <motion.div
-                    className={styles.mainImageWrap}
-                    layout
-                    transition={{ type: "spring", stiffness: 260, damping: 30 }}
-                  >
-                    {hasMany && (
-                      <button
-                        type="button"
-                        className={`${styles.navBtn} ${styles.navLeft}`}
-                        onClick={prev}
-                        aria-label="Anterior"
-                        disabled={index === 0}
-                      >
-                        ‹
-                      </button>
-                    )}
-
-                    <motion.div
-                      className={styles.mainImageDragArea}
-                      drag={hasMany ? "x" : false}
-                      dragConstraints={{ left: 0, right: 0 }}
-                      dragElastic={0.12}
-                      onDragEnd={(_, info) => {
-                        if (!hasMany) return;
-                        const offset = info.offset.x;
-                        if (offset > swipeConfidenceThreshold) prev();
-                        else if (offset < -swipeConfidenceThreshold) next();
-                      }}
-                    >
-                      <AnimatePresence mode="wait" custom={direction}>
-                        <motion.img
-                          key={images[index].url}
-                          custom={direction}
-                          variants={slideVariants}
-                          initial="enter"
-                          animate="center"
-                          exit="exit"
-                          transition={{ duration: 0.18, ease: "easeOut" }}
-                          className={styles.mainImg}
-                          src={images[index].url}
-                          alt={images[index].alt ?? project.name}
-                          decoding="async"
-                          loading="lazy"
-                          draggable={false}
-                        />
-                      </AnimatePresence>
-                    </motion.div>
-
-                    {hasMany && (
-                      <button
-                        type="button"
-                        className={`${styles.navBtn} ${styles.navRight}`}
-                        onClick={next}
-                        aria-label="Siguiente"
-                        disabled={index === images.length - 1}
-                      >
-                        ›
-                      </button>
-                    )}
-                  </motion.div>
-
-                  {hasMany && (
-                    <div
-                      className={styles.thumbsRow}
-                      aria-label="Carrusel de miniaturas"
-                    >
-                      {images.map((img, i) => (
-                        <button
-                          key={img.url + i}
-                          type="button"
-                          className={`${styles.thumbBtn} ${
-                            i === index ? styles.thumbBtnActive : ""
-                          }`}
-                          onClick={() => goTo(i)}
-                          aria-label={`Ver imagen ${i + 1}`}
-                        >
-                          <img
-                            className={styles.thumbImg}
-                            src={img.url}
-                            alt={img.alt ?? project.name}
-                            decoding="async"
-                            loading="lazy"
-                            draggable={false}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
   );
 }
