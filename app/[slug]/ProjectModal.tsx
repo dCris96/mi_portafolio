@@ -4,16 +4,25 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import styles from "./modal.module.css";
 
-type ProjectImage = {
-  url: string;
-  alt?: string;
-};
-
-type Project = {
-  _id: string;
-  name: string;
-  description?: string;
-  images?: ProjectImage[];
+// Variantes para el efecto de slide entre imágenes
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 300 : -300,
+    opacity: 0,
+    scale: 0.9,
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+    scale: 1,
+  },
+  exit: (direction: number) => ({
+    zIndex: 0,
+    x: direction < 0 ? 300 : -300,
+    opacity: 0,
+    scale: 0.9,
+  }),
 };
 
 export default function ProjectModal({
@@ -21,34 +30,33 @@ export default function ProjectModal({
   isOpen,
   onClose,
 }: {
-  project: Project | null;
+  project: any;
   isOpen: boolean;
   onClose: () => void;
 }) {
   const images = project?.images ?? [];
   const hasMany = images.length > 1;
 
-  // "grid" = galería patrón, "viewer" = vista completa
   const [mode, setMode] = useState<"grid" | "viewer">("grid");
-  const [index, setIndex] = useState(0);
+  const [[page, direction], setPage] = useState([0, 0]);
 
-  // Reset al cambiar de proyecto / abrir modal
+  const index = useMemo(() => {
+    const n = images.length;
+    if (n === 0) return 0;
+    return ((page % n) + n) % n;
+  }, [page, images.length]);
+
   useEffect(() => {
     if (!isOpen) return;
     setMode("grid");
-    setIndex(0);
+    setPage([0, 0]);
   }, [project?._id, isOpen]);
 
-  // Navegación infinita
-  const go = (dir: 1 | -1) => {
-    const n = images.length;
-    if (n === 0) return;
-    setIndex((prev) => (prev + dir + n) % n);
+  const paginate = (newDirection: number) => {
+    setPage([page + newDirection, newDirection]);
   };
 
-  const current = useMemo(() => images[index], [images, index]);
-
-  const swipeThreshold = 80;
+  const swipeThreshold = 50;
 
   return (
     <AnimatePresence>
@@ -58,132 +66,133 @@ export default function ProjectModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) onClose();
-          }}
+          onMouseDown={(e) => e.target === e.currentTarget && onClose()}
         >
           <motion.div
             className={styles.modal}
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 260, damping: 30 }}
-            role="dialog"
-            aria-modal="true"
-            aria-label={project ? `Modal de ${project.name}` : "Modal"}
           >
-            {/* HEADER (sin absolute) */}
             <div className={styles.modalHeader}>
               {hasMany && mode === "viewer" ? (
                 <button
                   type="button"
                   className={styles.modalBack}
                   onClick={() => setMode("grid")}
-                  aria-label="Volver a la galería"
                 >
                   ←
                 </button>
               ) : (
                 <span />
               )}
-
               <button
                 type="button"
                 className={styles.modalClose}
                 onClick={onClose}
-                aria-label="Cerrar"
               >
                 ✕
               </button>
             </div>
 
             <div className={styles.modalBody}>
-              {/* ====== CASO: MUCHAS IMÁGENES ====== */}
               {hasMany ? (
-                <>
-                  {/* Título + descripción ANTES de la galería */}
-                  <div className={styles.textos}>
-                    <h3 className={styles.modalTitle}>{project?.name}</h3>
-                    {project?.description ? (
-                      <p className={styles.modalParrafo}>
-                        {project.description}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  {/* GRID o VIEWER */}
+                <AnimatePresence mode="wait">
                   {mode === "grid" ? (
-                    <div className={styles.galleryGrid}>
-                      {images.map((img, i) => (
-                        <button
-                          key={img.url + i}
-                          type="button"
-                          className={styles.tileBtn}
-                          onClick={() => {
-                            setIndex(i);
-                            setMode("viewer");
-                          }}
-                          aria-label={`Abrir imagen ${i + 1}`}
-                        >
-                          <div className={styles.tile}>
-                            <img
-                              className={styles.tileImg}
-                              src={img.url}
-                              alt={img.alt ?? project?.name ?? "Imagen"}
-                              decoding="async"
-                              loading="lazy"
-                              draggable={false}
-                            />
-                          </div>
-                        </button>
-                      ))}
-                    </div>
+                    <motion.div
+                      key="grid"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className={styles.gridContainer} // Contenedor para agrupar textos y grid
+                    >
+                      {/* TEXTOS: Solo visibles en modo grid y si hay muchas imágenes */}
+                      <div className={styles.textos}>
+                        <h3 className={styles.modalTitle}>{project?.name}</h3>
+                        {project?.description && (
+                          <p className={styles.modalParrafo}>
+                            {project.description}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className={styles.galleryGrid}>
+                        {images.map((img: any, i: number) => (
+                          <button
+                            key={i}
+                            className={styles.tileBtn}
+                            onClick={() => {
+                              setPage([i, 0]);
+                              setMode("viewer");
+                            }}
+                          >
+                            <div className={styles.tile}>
+                              <img
+                                className={styles.tileImg}
+                                src={img.url}
+                                alt=""
+                              />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
                   ) : (
-                    <div className={styles.viewerWrap}>
-                      <div className={styles.viewerStage}>
+                    <div
+                      className={styles.viewerWrap}
+                      style={{ overflow: "hidden", position: "relative" }}
+                    >
+                      <AnimatePresence initial={false} custom={direction}>
                         <motion.div
-                          className={styles.viewerDrag}
+                          key={page}
+                          custom={direction}
+                          variants={slideVariants}
+                          initial="enter"
+                          animate="center"
+                          exit="exit"
+                          transition={{
+                            x: { type: "spring", stiffness: 300, damping: 30 },
+                            opacity: { duration: 0.2 },
+                          }}
                           drag="x"
                           dragConstraints={{ left: 0, right: 0 }}
-                          dragElastic={0.12}
-                          onDragEnd={(_, info) => {
-                            const offset = info.offset.x;
-                            if (offset > swipeThreshold) go(-1);
-                            else if (offset < -swipeThreshold) go(1);
+                          dragElastic={1}
+                          onDragEnd={(e, { offset }) => {
+                            const swipe = offset.x;
+                            if (swipe < -swipeThreshold) {
+                              paginate(1);
+                            } else if (swipe > swipeThreshold) {
+                              paginate(-1);
+                            }
+                          }}
+                          className={styles.viewerDrag}
+                          style={{
+                            position: "absolute",
+                            width: "100%",
+                            height: "100%",
                           }}
                         >
-                          {/* Vista completa en el mismo modal */}
-                          {current ? (
-                            <img
-                              className={styles.viewerImg}
-                              src={current.url}
-                              alt={current.alt ?? project?.name ?? "Imagen"}
-                              decoding="async"
-                              loading="lazy"
-                              draggable={false}
-                            />
-                          ) : null}
+                          <img
+                            className={styles.viewerImg}
+                            src={images[index].url}
+                            alt=""
+                            draggable={false}
+                          />
                         </motion.div>
-                      </div>
+                      </AnimatePresence>
                     </div>
                   )}
-                </>
+                </AnimatePresence>
               ) : (
-                /* ====== CASO: 0 o 1 IMAGEN (tu comportamiento actual) ====== */
-                <>
-                  {images[0] ? (
-                    <div className={styles.singleWrap}>
-                      <img
-                        className={styles.singleImg}
-                        src={images[0].url}
-                        alt={images[0].alt ?? project?.name ?? "Imagen"}
-                        decoding="async"
-                        loading="lazy"
-                        draggable={false}
-                      />
-                    </div>
-                  ) : null}
-                </>
+                <div className={styles.singleWrap}>
+                  {images[0] && (
+                    <img
+                      className={styles.singleImg}
+                      src={images[0].url}
+                      alt=""
+                    />
+                  )}
+                </div>
               )}
             </div>
           </motion.div>
