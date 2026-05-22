@@ -20,10 +20,10 @@ export default function WaterDragImages() {
   };
 
   const items: Item[] = [
-    { src: "/foto1.jpg", alt: "Imagen 1", rotate: 5, z: 1, offsetY: 8 },
-    { src: "/foto2.jpg", alt: "Imagen 2", rotate: -4, z: 2, offsetY: -20 },
-    { src: "/foto3.jpg", alt: "Imagen 3", rotate: 4, z: 3, offsetY: 3 },
-    { src: "/foto4.png", alt: "Imagen 4", rotate: -2, z: 4, offsetY: -8 },
+    { src: "/1.png", alt: "Imagen 1", rotate: 5, z: 1, offsetY: 8 },
+    { src: "/2.png", alt: "Imagen 2", rotate: -4, z: 2, offsetY: -20 },
+    { src: "/3.png", alt: "Imagen 3", rotate: 4, z: 3, offsetY: 3 },
+    { src: "/4.png", alt: "Imagen 4", rotate: -2, z: 4, offsetY: -8 },
   ];
 
   const wrapRef = React.useRef<HTMLDivElement | null>(null);
@@ -40,25 +40,25 @@ export default function WaterDragImages() {
 
   // Springs para rotación (suaves)
   const rzSprings = baseRz.map((mv) =>
-    useSpring(mv, { stiffness: 240, damping: 22, mass: 0.7 })
+    useSpring(mv, { stiffness: 240, damping: 22, mass: 0.7 }),
   );
   const rxSprings = baseRx.map((mv) =>
-    useSpring(mv, { stiffness: 240, damping: 22, mass: 0.7 })
+    useSpring(mv, { stiffness: 240, damping: 22, mass: 0.7 }),
   );
   const rySprings = baseRy.map((mv) =>
-    useSpring(mv, { stiffness: 240, damping: 22, mass: 0.7 })
+    useSpring(mv, { stiffness: 240, damping: 22, mass: 0.7 }),
   );
 
   // Springs para suavizar
   const xSprings = baseX.map((mv) =>
-    useSpring(mv, { stiffness: 260, damping: 22, mass: 0.7 })
+    useSpring(mv, { stiffness: 260, damping: 22, mass: 0.7 }),
   );
   const ySprings = baseY.map((mv) =>
-    useSpring(mv, { stiffness: 260, damping: 22, mass: 0.7 })
+    useSpring(mv, { stiffness: 260, damping: 22, mass: 0.7 }),
   );
 
   const yWithOffset = ySprings.map((mv, i) =>
-    useTransform(mv, (v) => v + items[i].offsetY)
+    useTransform(mv, (v) => v + items[i].offsetY),
   );
 
   // Parámetros del “agua”
@@ -193,7 +193,7 @@ export default function WaterDragImages() {
         -(
           (dxp * dxp) / (2 * SIGMA_X * SIGMA_X) +
           (dyp * dyp) / (2 * SIGMA_Y * SIGMA_Y)
-        )
+        ),
       );
 
       // prioridad: activa vs demás
