@@ -24,7 +24,7 @@ export default function Page() {
 
       <section className={styles.datos}>
         <div className={styles.stat}>
-          <div className={styles.statNum}>1+</div>
+          <div className={styles.statNum}>3+</div>
           <div className={styles.statLabel}>Years of experience</div>
         </div>
 
